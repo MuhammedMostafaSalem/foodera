@@ -10,7 +10,7 @@ const getAllTypesHook = () => {
         if(types) {
             dispatch(GetAllTypes());
         }
-    }, []);
+    }, [types]);
 
     let itemsAlltypes = [];
     try {
