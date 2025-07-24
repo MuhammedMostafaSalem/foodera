@@ -1,3 +1,5 @@
+import Sreach from "./components/Sreach"
+import Table from "./components/Table"
 import Sidebar from "./components/utils/Sidebar"
 
 function App() {
@@ -5,7 +7,10 @@ function App() {
   return (
     <>
       <Sidebar>
-        <div>hello foodara</div>
+        <div className="p-[15px]">  
+          <Sreach />
+          <Table />
+        </div>
       </Sidebar>
     </>
   )
