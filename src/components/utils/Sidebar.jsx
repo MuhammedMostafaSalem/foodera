@@ -30,7 +30,7 @@ const Sidebar = ({children}) => {
                 <GrPower />
             </div>
 
-            <div className="adminPage bg-gray-50 w-full">
+            <div className="adminPage bg-gray-50 w-full overflow-y-auto">
                 <NavBar />
                 <div>{children}</div>
             </div>
