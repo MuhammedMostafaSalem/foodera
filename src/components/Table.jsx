@@ -1,11 +1,13 @@
 import { useState } from "react";
 import getAllTypesHook from "../hooks/getAllTypesHook";
 import ModalDelete from "./utils/modal/ModalDelete";
+import ModalEdit from "./utils/modal/ModalEdit";
 
 const Table = () => {
     const [itemsAlltypes, loading, error] = getAllTypesHook();
 
     const [showModal, setShowModal] = useState(false);
+    const [showModalEdit, setShowModalEdit] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
 
         if (loading) {
@@ -81,6 +83,10 @@ const Table = () => {
                                                 rounded
                                                 hover:bg-purple-700
                                                 text-sm"
+                                                onClick={() => {
+                                                    setSelectedId(item.Id);
+                                                    setShowModalEdit(true);
+                                                }}
                                             >
                                             تعديل
                                             </button>
@@ -94,6 +100,14 @@ const Table = () => {
                             <ModalDelete
                                 isOpen={showModal}
                                 onClose={() => setShowModal(false)}
+                                id={selectedId}
+                            />
+                        )}
+
+                        {showModalEdit && (
+                            <ModalEdit
+                                isOpen={showModalEdit}
+                                onClose={() => setShowModalEdit(false)}
                                 id={selectedId}
                             />
                         )}
