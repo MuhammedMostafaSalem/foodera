@@ -1,6 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import getOnetypeHook from "../../../hooks/getOnetypeHook";
 
 const ModalEdit = ({isOpen, onClose, id}) => {
+    const [itemType] = getOnetypeHook(id);
+
     const modalRef = useRef(null);
     const [formData, setFormData] = useState({
         Name_Ar: "",
@@ -8,6 +11,17 @@ const ModalEdit = ({isOpen, onClose, id}) => {
         IsActive: true,
         Icon_path: ""
     });
+
+    useEffect(() => {
+        if(itemType) {
+            setFormData({
+                Name_Ar: itemType.Name_Ar || "",
+                Name_En: itemType.Name_En || "",
+                IsActive: itemType.IsActive !== undefined ? itemType.IsActive : true,
+                Icon_path: itemType.Icon_path || ""
+            })
+        }
+    }, [itemType])
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -84,10 +98,17 @@ const ModalEdit = ({isOpen, onClose, id}) => {
                                 <div className="flex items-center gap-4">
                                     <label className="cursor-pointer">
                                         <img
+                                            // src={
+                                            //     formData.Icon_path
+                                            //         ? URL.createObjectURL(formData.Icon_path)
+                                            //         : "http://41.38.56.140/Icons/img_6bd6c18a-2fb5-43ea-a5b5-5268482b9c83.jpg"
+                                            // }
                                             src={
-                                                formData.Icon_path
+                                                typeof formData.Icon_path === "string"
+                                                    ? `http://41.38.56.140/Icons/${formData.Icon_path}`
+                                                    : formData.Icon_path
                                                     ? URL.createObjectURL(formData.Icon_path)
-                                                    : "http://41.38.56.140/Icons/img_6bd6c18a-2fb5-43ea-a5b5-5268482b9c83.jpg"
+                                                    : "https://via.placeholder.com/100"
                                             }
                                             alt="Icon Preview"
                                             className="w-[100px] h-[100px] object-cover rounded-[10px] border"
