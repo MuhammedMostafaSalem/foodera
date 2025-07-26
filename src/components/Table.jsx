@@ -54,7 +54,7 @@ const Table = () => {
                                             <span
                                                 className='px-2 py-1 text-sm font-semibold rounded bg-blue-300'
                                             >
-                                                {item.status ? "مفعّل" : "غير مفعّل"}
+                                                {item.IsActive ? "مفعّل" : "غير مفعّل"}
                                             </span>
                                         </td>
                                         <td className="px-4 py-3">
