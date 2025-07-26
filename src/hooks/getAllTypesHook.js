@@ -1,16 +1,18 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { GetAllTypes } from "../store/thunkApi/storeTypesThunk";
 
 const getAllTypesHook = () => {
     const dispatch = useDispatch();
     const { types, loading, error } = useSelector((state) => state.storeTypes);
+    
+    const fetchData = useCallback(() => {
+        dispatch(GetAllTypes());
+    }, [dispatch]);
 
     useEffect(() => {
-        if(types) {
-            dispatch(GetAllTypes());
-        }
-    }, [types]);
+        fetchData();
+    }, [fetchData]);
 
     let itemsAlltypes = [];
     try {
