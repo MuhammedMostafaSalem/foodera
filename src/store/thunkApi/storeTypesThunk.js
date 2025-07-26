@@ -12,3 +12,15 @@ export const GetAllTypes = createAsyncThunk(
         }
     }
 );
+
+export const GetOneType = createAsyncThunk(
+    "storeTypes/getOneTypes",
+    async (id, thunkAPI) => {
+        try {
+            const res = await useGetData(`/api/StoreTypes/GetStoreTypeById/${id}`);
+            return res.data; // assuming response format: { data: [...] }
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response?.data || "حدث خطأ");
+        }
+    }
+);
