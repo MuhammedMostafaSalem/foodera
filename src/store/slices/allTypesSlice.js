@@ -1,9 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { GetAllTypes, GetOneType } from "../thunkApi/storeTypesThunk";
+import { GetAllTypes, GetOneType, UpdateOneType } from "../thunkApi/storeTypesThunk";
 
 const initialState = {
     types: [],
     oneType: {},
+    updateType: [],
+    success: false,
     loading: false,
     error: null,
 }
@@ -35,6 +37,23 @@ const allTypesSlice = createSlice({
             })
             .addCase(GetOneType.rejected, (state, action) => {
                 state.error = action.payload;
+            });
+
+        builder
+            .addCase(UpdateOneType.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+                state.success = false;
+            })
+            .addCase(UpdateOneType.fulfilled, (state, action) => {
+                state.loading = false;
+                state.updateType = action.payload;
+                state.success = true;
+            })
+            .addCase(UpdateOneType.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload;
+                state.success = false;
             });
     }
 })
