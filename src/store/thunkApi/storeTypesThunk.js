@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import useGetData from "../../hook/useGetData";
+import useUpdateData from "../../hook/useUpdateData";
 
 export const GetAllTypes = createAsyncThunk(
     "storeTypes/getAllTypes",
@@ -21,6 +22,18 @@ export const GetOneType = createAsyncThunk(
             return res.data; // assuming response format: { data: [...] }
         } catch (error) {
             return thunkAPI.rejectWithValue(error.response?.data || "حدث خطأ");
+        }
+    }
+);
+
+export const UpdateOneType = createAsyncThunk(
+    "storeTypes/UpdateOneType",
+    async ({ id, formData }, thunkAPI) => {
+        try {
+            const res = await useUpdateData(`/api/StoreTypes/UpdateStoreType/${id}`, formData);
+            return res.data; // assuming response format: { data: [...] }
+        } catch (error) {
+            return thunkAPI.rejectWithValue(error.response?.data || "حدث خطأ أثناء التعديل");
         }
     }
 );
