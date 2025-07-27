@@ -1,44 +1,22 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import getOnetypeHook from "../../../hooks/getOnetypeHook";
+import updateOneTypeHook from "../../../hooks/updateOneTypeHook ";
 
 const ModalEdit = ({isOpen, onClose, id}) => {
     const [itemType] = getOnetypeHook(id);
-
+    console.log(itemType)
+    const [
+        img,
+        nameAr,
+        nameEn,
+        isActive,
+        onImageChange,
+        onNameArChange,
+        onNameEnChange,
+        onIsActiveChange,
+        handleEditSubmit
+    ] = updateOneTypeHook(itemType, id, onClose);
     const modalRef = useRef(null);
-    const [formData, setFormData] = useState({
-        Name_Ar: "",
-        Name_En: "",
-        IsActive: true,
-        Icon_path: ""
-    });
-
-    useEffect(() => {
-        if(itemType) {
-            setFormData({
-                Name_Ar: itemType.Name_Ar || "",
-                Name_En: itemType.Name_En || "",
-                IsActive: itemType.IsActive !== undefined ? itemType.IsActive : true,
-                Icon_path: itemType.Icon_path || ""
-            })
-        }
-    }, [itemType])
-
-    const handleChange = (e) => {
-        const { name, value, type, checked } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value
-        }));
-    }
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log("Form submitted:", formData);
-
-        setTimeout(() => {
-            onClose();
-        }, 3000)
-    }
 
     const handleClickOutside = (e) => {
         if (modalRef.current && !modalRef.current.contains(e.target)) {
@@ -66,14 +44,14 @@ const ModalEdit = ({isOpen, onClose, id}) => {
                     >
                         <h1>هل أنت متأكد أنك تريد تعديل هذا (الid) : {id}</h1>
 
-                        <form onSubmit={handleSubmit} className="space-y-4 mt-[30px]">
+                        <form className="space-y-4 mt-[30px]" onSubmit={handleEditSubmit}>
                             <div>
                                 <label className="block mb-1 font-medium">القسم بالعربية</label>
                                 <input
                                     type="text"
                                     name="Name_Ar"
-                                    value={formData.Name_Ar}
-                                    onChange={handleChange}
+                                    value={nameAr}
+                                    onChange={onNameArChange}
                                     className="w-full border rounded-[10px] px-3 py-2 focus:outline-none"
                                     placeholder="ادخل القسم بالعربية"
                                     required
@@ -85,8 +63,8 @@ const ModalEdit = ({isOpen, onClose, id}) => {
                                 <input
                                     type="text"
                                     name="Name_En"
-                                    value={formData.Name_En}
-                                    onChange={handleChange}
+                                    value={nameEn}
+                                    onChange={onNameEnChange}
                                     placeholder="ادخل القسم بالإنجليزية"
                                     className="w-full border rounded-[10px] px-3 py-2 focus:outline-none"
                                     required
@@ -97,37 +75,21 @@ const ModalEdit = ({isOpen, onClose, id}) => {
                                 <label className="block mb-1 font-medium">الصورة</label>
                                 <div className="flex items-center gap-4">
                                     <label className="cursor-pointer">
-                                        <img
-                                            // src={
-                                            //     formData.Icon_path
-                                            //         ? URL.createObjectURL(formData.Icon_path)
-                                            //         : "http://41.38.56.140/Icons/img_6bd6c18a-2fb5-43ea-a5b5-5268482b9c83.jpg"
-                                            // }
-                                            src={
-                                                typeof formData.Icon_path === "string"
-                                                    ? `http://41.38.56.140/Icons/${formData.Icon_path}`
-                                                    : formData.Icon_path
-                                                    ? URL.createObjectURL(formData.Icon_path)
-                                                    : "https://via.placeholder.com/100"
-                                            }
-                                            alt="Icon Preview"
-                                            className="w-[100px] h-[100px] object-cover rounded-[10px] border"
-                                        />
+                                        {img && typeof img === 'string' && (
+                                            <img
+                                                src={img}
+                                                alt="Icon Preview"
+                                                className="w-[100px] h-[100px] object-cover rounded-[10px] border"
+                                            />
+                                        )}
                                         <input
                                             type="file"
                                             name="Icon_path"
                                             accept="image/*"
-                                            onChange={(e) => {
-                                                const file = e.target.files[0];
-                                                if (file) {
-                                                    setFormData((prev) => ({
-                                                        ...prev,
-                                                        Icon_path: file
-                                                    }));
-                                                }
-                                            }}
                                             className="hidden"
+                                            onChange={onImageChange}
                                         />
+                                        <div>{img}</div>
                                     </label>
                                 </div>
                             </div>
@@ -141,10 +103,8 @@ const ModalEdit = ({isOpen, onClose, id}) => {
                                         type="radio"
                                         name="IsActive"
                                         value="true"
-                                        checked={formData.IsActive === true}
-                                        onChange={() =>
-                                            setFormData((prev) => ({ ...prev, IsActive: true }))
-                                        }
+                                        checked={isActive === true}
+                                        onChange={onIsActiveChange}
                                     />
                                     <span>مفعل</span>
                                 </label>
@@ -154,10 +114,8 @@ const ModalEdit = ({isOpen, onClose, id}) => {
                                         type="radio"
                                         name="IsActive"
                                         value="false"
-                                        checked={formData.IsActive === false}
-                                        onChange={() =>
-                                            setFormData((prev) => ({ ...prev, IsActive: false }))
-                                        }
+                                        checked={isActive === false}
+                                        onChange={onIsActiveChange}
                                     />
                                     <span>غير مفعل</span>
                                 </label>
